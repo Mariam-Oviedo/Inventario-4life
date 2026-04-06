@@ -11,7 +11,10 @@ app.use(express.static('public'));
 // LEER productos
 app.get('/productos', (req, res) => {
     db.query('SELECT * FROM productos', (err, result) => { 
-        if (err) throw err; 
+        if (err) {
+            console.error(err);
+            return res.status(500).send(err);
+        } 
         res.json(result); 
     });
 });
@@ -21,7 +24,10 @@ app.post('/productos', (req, res) => {
     const { nombre, precio, categoria, stock } = req.body; 
     const sql = 'INSERT INTO productos (nombre, precio, categoria, stock) VALUES (?, ?, ?, ?)'; 
     db.query(sql, [nombre, precio, categoria, stock], (err, result) => {
-        if (err) throw err; 
+        if (err) {
+            console.error(err);
+            return res.status(500).send(err);
+        } 
         res.send('Producto 4Life agregado'); 
     });
 });
@@ -30,11 +36,16 @@ app.post('/productos', (req, res) => {
 app.delete('/productos/:id', (req, res) => {
     const { id } = req.params; 
     db.query('DELETE FROM productos WHERE id=?', [id], (err, result) => { 
-        if (err) throw err; 
+        if (err) {
+            console.error(err);
+            return res.status(500).send(err);
+        } 
         res.send("Producto eliminado"); 
     });
 });
 
-app.listen(3000, () => {
-    console.log('Servidor en http://localhost:3000'); 
+// CAMBIO AQUÍ: Usar el puerto que asigne Render o el 3000 por defecto
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`); 
 });
