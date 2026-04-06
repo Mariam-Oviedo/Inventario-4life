@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario Productos 4Life</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Inventario de Productos Naturales 4Life</h1>
+        
+        <div class="card">
+            <h3>Agregar Nuevo Producto</h3>
+            <form id="producto-form">
+                <input type="text" id="nombre" placeholder="Nombre del producto" required>
+                <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+                <input type="text" id="categoria" placeholder="Categoría (Ej: Suplementos)" required>
+                <input type="number" id="stock" placeholder="Stock" required>
+                <button type="submit" class="btn-guardar">Guardar</button>
+            </form>
+        </div>
+
+        <div id="inventario" class="grid-productos">
+            </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
