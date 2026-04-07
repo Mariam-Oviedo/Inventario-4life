@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Inventario Natural🔹</title>
     <style>
         :root {
@@ -10,37 +10,42 @@
             --azul-medio: #1976d2;
             --azul-claro: #e3f2fd;
         }
+        * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background-color: #f0f4f8; margin: 0; padding: 10px; }
-        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 8px solid var(--azul-oscuro); }
-        h2 { color: var(--azul-oscuro); text-align: center; font-size: 1.5rem; }
         
-        /* Formulario adaptable */
-        .formulario { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 25px; background: var(--azul-claro); padding: 15px; border-radius: 10px; }
-        @media (min-width: 600px) { .formulario { grid-template-columns: 1fr 1fr; } }
+        .container { max-width: 100%; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 6px solid var(--azul-oscuro); }
         
-        input { padding: 12px; border: 1px solid #bbdefb; border-radius: 8px; font-size: 16px; width: 100%; box-sizing: border-box; }
-        .btn-guardar { background: var(--azul-oscuro); color: white; border: none; padding: 15px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 16px; width: 100%; grid-column: 1 / -1; }
+        h2 { color: var(--azul-oscuro); text-align: center; font-size: 1.3rem; margin-top: 0; }
+        
+        /* Formulario */
+        .formulario { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; background: var(--azul-claro); padding: 15px; border-radius: 10px; }
+        input { padding: 12px; border: 1px solid #bbdefb; border-radius: 8px; font-size: 16px; width: 100%; }
+        .btn-guardar { background: var(--azul-oscuro); color: white; border: none; padding: 15px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 16px; }
 
-        /* Tabla Responsiva: Se convierte en bloques en el celular */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        thead { display: none; } /* Escondemos cabecera en móvil */
-        tr { display: block; margin-bottom: 15px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 10px; background: #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.03); }
-        td { display: flex; justify-content: space-between; padding: 8px 5px; border-bottom: 1px solid #f0f0f0; font-size: 14px; text-align: right; }
-        td::before { content: attr(data-label); font-weight: bold; text-align: left; color: var(--azul-oscuro); }
-        td:last-child { border-bottom: none; justify-content: center; gap: 10px; padding-top: 15px; }
-
-        /* Estilo para PC (Pantallas grandes) */
-        @media (min-width: 768px) {
-            thead { display: table-header-group; }
-            tr { display: table-row; }
-            td { display: table-cell; text-align: center; border-bottom: 1px solid #e1e8ed; }
-            td::before { content: none; }
-            .container { padding: 30px; }
+        /* Lista de productos modo Tarjetas para Celular */
+        .producto-card {
+            background: #fff;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
+        .dato { display: flex; justify-content: space-between; border-bottom: 1px f0f0f0 solid; padding: 4px 0; }
+        .label { font-weight: bold; color: var(--azul-oscuro); }
+        
+        .acciones { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-editar { background: #2196f3; color: white; border: none; padding: 10px; border-radius: 6px; flex: 1; font-weight: bold; }
+        .btn-eliminar { background: #ef5350; color: white; border: none; padding: 10px; border-radius: 6px; flex: 1; font-weight: bold; }
 
-        .btn-editar { background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; }
-        .btn-eliminar { background: #ef5350; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; }
-        .precio { font-weight: bold; color: #2e7d32; }
+        /* Para pantallas grandes (PC) */
+        @media (min-width: 768px) {
+            .container { max-width: 800px; padding: 30px; }
+            .formulario { display: grid; grid-template-columns: 1fr 1fr; }
+            .btn-guardar { grid-column: span 2; }
+        }
     </style>
 </head>
 <body>
@@ -55,44 +60,33 @@
             <button onclick="guardarProducto()" class="btn-guardar">💾 GUARDAR PRODUCTO</button>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>P. Socio</th>
-                    <th>P. Cliente</th>
-                    <th>Stock</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="lista-productos"></tbody>
-        </table>
+        <div id="lista-productos">
+            </div>
     </div>
 
     <script>
         const API_URL = 'https://inventario-4life.onrender.com/productos';
 
         async function cargarProductos() {
-            try {
-                const res = await fetch(API_URL);
-                const productos = await res.json();
-                const tabla = document.getElementById('lista-productos');
-                tabla.innerHTML = '';
-                productos.forEach(p => {
-                    tabla.innerHTML += `
-                        <tr>
-                            <td data-label="Producto"><strong>${p.nombre}</strong></td>
-                            <td data-label="P. Socio" class="precio">$${p.precio_socio}</td>
-                            <td data-label="P. Cliente" class="precio">$${p.precio_cliente}</td>
-                            <td data-label="Stock">${p.cantidad}</td>
-                            <td>
-                                <button class="btn-editar" onclick='cargarEnFormulario(${JSON.stringify(p)})'>Editar</button>
-                                <button class="btn-eliminar" onclick="eliminarProducto(${p.id})">Borrar</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            } catch (error) { console.error("Error:", error); }
+            const res = await fetch(API_URL);
+            const productos = await res.json();
+            const contenedor = document.getElementById('lista-productos');
+            contenedor.innerHTML = '';
+            
+            productos.forEach(p => {
+                contenedor.innerHTML += `
+                    <div class="producto-card">
+                        <div class="dato"><span class="label">Producto:</span> <span>${p.nombre}</span></div>
+                        <div class="dato"><span class="label">P. Socio:</span> <span>$${p.precio_socio}</span></div>
+                        <div class="dato"><span class="label">P. Cliente:</span> <span>$${p.precio_cliente}</span></div>
+                        <div class="dato"><span class="label">Stock:</span> <span>${p.cantidad}</span></div>
+                        <div class="acciones">
+                            <button class="btn-editar" onclick='cargarEnFormulario(${JSON.stringify(p)})'>Editar</button>
+                            <button class="btn-eliminar" onclick="eliminarProducto(${p.id})">Borrar</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         async function guardarProducto() {
@@ -103,12 +97,8 @@
                 precio_cliente: document.getElementById('precio_cliente').value,
                 cantidad: document.getElementById('cantidad').value
             };
-            if(!data.nombre) return alert("Escribe el nombre");
-
             const metodo = id ? 'PUT' : 'POST';
-            const url = id ? `${API_URL}/${id}` : API_URL;
-
-            await fetch(url, {
+            await fetch(id ? `${API_URL}/${id}` : API_URL, {
                 method: metodo,
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data)
@@ -118,7 +108,7 @@
         }
 
         async function eliminarProducto(id) {
-            if(confirm('¿Borrar este producto?')) {
+            if(confirm('¿Borrar producto?')) {
                 await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
                 cargarProductos();
             }
