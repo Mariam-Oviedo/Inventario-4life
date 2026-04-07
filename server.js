@@ -7,6 +7,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// ESTE CÓDIGO ARREGLA TU TABLA AUTOMÁTICAMENTE
+app.get('/instalar-tabla', (req, res) => {
+    const sql = `
+        CREATE TABLE IF NOT EXISTS productos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(255) NOT NULL,
+            precio_socio DECIMAL(10, 2) NOT NULL,
+            precio_cliente DECIMAL(10, 2) NOT NULL,
+            cantidad INT NOT NULL
+        )`;
+    db.query(sql, (err) => {
+        if (err) return res.status(500).send("Error: " + err.message);
+        res.send("¡Tabla de productos naturales creada con éxito!");
+    });
+});
+
 // OBTENER PRODUCTOS
 app.get('/productos', (req, res) => {
     db.query('SELECT * FROM productos', (err, results) => {
