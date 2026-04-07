@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario Productos Naturales</title>
+    <title>Inventario Natural🔹</title>
     <style>
         :root {
             --azul-oscuro: #0d47a1;
             --azul-medio: #1976d2;
             --azul-claro: #e3f2fd;
-            --blanco: #ffffff;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; padding: 20px; color: #333; }
-        .container { max-width: 950px; margin: auto; background: var(--blanco); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 8px solid var(--azul-oscuro); }
-        h2 { color: var(--azul-oscuro); text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
-        .formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; background: var(--azul-claro); padding: 20px; border-radius: 10px; }
-        input { padding: 12px; border: 1px solid #bbdefb; border-radius: 6px; font-size: 15px; }
-        input:focus { outline: none; border-color: var(--azul-medio); box-shadow: 0 0 5px rgba(25, 118, 210, 0.3); }
-        .btn-guardar { grid-column: span 2; background: var(--azul-oscuro); color: white; border: none; padding: 15px; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-guardar:hover { background: var(--azul-medio); transform: translateY(-1px); }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; overflow: hidden; border-radius: 8px; }
-        th { background-color: var(--azul-oscuro); color: white; padding: 15px; text-transform: uppercase; font-size: 13px; }
-        td { padding: 12px; border-bottom: 1px solid #e1e8ed; text-align: center; background-color: white; }
-        tr:hover td { background-color: #f9fbff; }
-        .btn-editar { background: #2196f3; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; margin-right: 5px; }
-        .btn-eliminar { background: #ef5350; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
-        .btn-editar:hover { background: #1976d2; }
-        .btn-eliminar:hover { background: #c62828; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f4f8; margin: 0; padding: 10px; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 8px solid var(--azul-oscuro); }
+        h2 { color: var(--azul-oscuro); text-align: center; font-size: 1.5rem; }
+        
+        /* Formulario adaptable */
+        .formulario { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 25px; background: var(--azul-claro); padding: 15px; border-radius: 10px; }
+        @media (min-width: 600px) { .formulario { grid-template-columns: 1fr 1fr; } }
+        
+        input { padding: 12px; border: 1px solid #bbdefb; border-radius: 8px; font-size: 16px; width: 100%; box-sizing: border-box; }
+        .btn-guardar { background: var(--azul-oscuro); color: white; border: none; padding: 15px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 16px; width: 100%; grid-column: 1 / -1; }
+
+        /* Tabla Responsiva: Se convierte en bloques en el celular */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        thead { display: none; } /* Escondemos cabecera en móvil */
+        tr { display: block; margin-bottom: 15px; border: 1px solid #e1e8ed; border-radius: 10px; padding: 10px; background: #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.03); }
+        td { display: flex; justify-content: space-between; padding: 8px 5px; border-bottom: 1px solid #f0f0f0; font-size: 14px; text-align: right; }
+        td::before { content: attr(data-label); font-weight: bold; text-align: left; color: var(--azul-oscuro); }
+        td:last-child { border-bottom: none; justify-content: center; gap: 10px; padding-top: 15px; }
+
+        /* Estilo para PC (Pantallas grandes) */
+        @media (min-width: 768px) {
+            thead { display: table-header-group; }
+            tr { display: table-row; }
+            td { display: table-cell; text-align: center; border-bottom: 1px solid #e1e8ed; }
+            td::before { content: none; }
+            .container { padding: 30px; }
+        }
+
+        .btn-editar { background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; }
+        .btn-eliminar { background: #ef5350; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; }
         .precio { font-weight: bold; color: #2e7d32; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🔹 Inventario de Productos Naturales</h2>
+        <h2>🔹 Mi Inventario Natural</h2>
         <div class="formulario">
             <input type="hidden" id="prod-id">
             <input type="text" id="nombre" placeholder="Nombre del Producto">
             <input type="number" id="precio_socio" placeholder="Precio Socio ($)">
             <input type="number" id="precio_cliente" placeholder="Precio Cliente ($)">
-            <input type="number" id="cantidad" placeholder="Cantidad Disponible">
+            <input type="number" id="cantidad" placeholder="Cantidad disponible">
             <button onclick="guardarProducto()" class="btn-guardar">💾 GUARDAR PRODUCTO</button>
         </div>
 
@@ -68,13 +81,13 @@
                 productos.forEach(p => {
                     tabla.innerHTML += `
                         <tr>
-                            <td style="text-align: left; padding-left: 20px;"><strong>${p.nombre}</strong></td>
-                            <td class="precio">$${p.precio_socio}</td>
-                            <td class="precio">$${p.precio_cliente}</td>
-                            <td>${p.cantidad}</td>
+                            <td data-label="Producto"><strong>${p.nombre}</strong></td>
+                            <td data-label="P. Socio" class="precio">$${p.precio_socio}</td>
+                            <td data-label="P. Cliente" class="precio">$${p.precio_cliente}</td>
+                            <td data-label="Stock">${p.cantidad}</td>
                             <td>
                                 <button class="btn-editar" onclick='cargarEnFormulario(${JSON.stringify(p)})'>Editar</button>
-                                <button class="btn-eliminar" onclick="eliminarProducto(${p.id})">Eliminar</button>
+                                <button class="btn-eliminar" onclick="eliminarProducto(${p.id})">Borrar</button>
                             </td>
                         </tr>
                     `;
@@ -90,8 +103,7 @@
                 precio_cliente: document.getElementById('precio_cliente').value,
                 cantidad: document.getElementById('cantidad').value
             };
-
-            if(!data.nombre || !data.precio_socio) return alert("Por favor llena los datos");
+            if(!data.nombre) return alert("Escribe el nombre");
 
             const metodo = id ? 'PUT' : 'POST';
             const url = id ? `${API_URL}/${id}` : API_URL;
@@ -101,13 +113,12 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data)
             });
-
             limpiarFormulario();
             cargarProductos();
         }
 
         async function eliminarProducto(id) {
-            if(confirm('¿Deseas eliminar este registro?')) {
+            if(confirm('¿Borrar este producto?')) {
                 await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
                 cargarProductos();
             }
@@ -129,7 +140,6 @@
             document.getElementById('precio_cliente').value = '';
             document.getElementById('cantidad').value = '';
         }
-
         cargarProductos();
     </script>
 </body>
