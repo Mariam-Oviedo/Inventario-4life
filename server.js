@@ -43,7 +43,25 @@ app.delete('/productos/:id', (req, res) => {
         res.send("Producto eliminado"); 
     });
 });
+// Ruta para EDITAR (PUT)
+app.put('/productos/:id', (req, res) => {
+    const { id } = req.params;
+    const { nombre, precio_socio, precio_cliente, cantidad } = req.body;
+    const query = 'UPDATE productos SET nombre=?, precio_socio=?, precio_cliente=?, cantidad=? WHERE id=?';
+    db.query(query, [nombre, precio_socio, precio_cliente, cantidad, id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.json({ message: "Actualizado" });
+    });
+});
 
+// Ruta para ELIMINAR (DELETE)
+app.delete('/productos/:id', (req, res) => {
+    const { id } = req.params;
+    db.query('DELETE FROM productos WHERE id = ?', [id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.json({ message: "Eliminado" });
+    });
+});
 // CAMBIO AQUÍ: Usar el puerto que asigne Render o el 3000 por defecto
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
